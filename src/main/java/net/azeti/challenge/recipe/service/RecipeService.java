@@ -1,10 +1,12 @@
-package net.azeti.challenge.recipe.recipe;
+package net.azeti.challenge.recipe.service;
+
+import net.azeti.challenge.recipe.model.Recipe;
 
 import java.util.List;
 import java.util.Optional;
 
 // This class assumes the Recipe's id is a Long, this can be changed if needed.
-public interface RecipeManagement {
+public interface RecipeService {
 
     Recipe create(Recipe recipe);
 
