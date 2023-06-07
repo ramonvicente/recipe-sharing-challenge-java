@@ -11,10 +11,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RecipeServiceImpl implements RecipeService {
 
+    public static final String ERROR_MEESAGE_RECIPE_SHOULD_NOT_BE_NULL = "recipe should not be null.";
     private final RecipeRepository recipeRepository;
 
     @Override
     public Recipe create(Recipe recipe) {
+        if(recipe == null) {
+            throw new IllegalArgumentException(ERROR_MEESAGE_RECIPE_SHOULD_NOT_BE_NULL);
+        }
         recipeRepository.save(recipe);
         return recipe;
     }
