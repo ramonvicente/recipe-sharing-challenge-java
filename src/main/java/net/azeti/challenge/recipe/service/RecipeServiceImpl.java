@@ -3,7 +3,6 @@ package net.azeti.challenge.recipe.service;
 import lombok.RequiredArgsConstructor;
 import net.azeti.challenge.recipe.model.Recipe;
 import net.azeti.challenge.recipe.repository.RecipeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +11,8 @@ import java.util.Optional;
 public class RecipeServiceImpl implements RecipeService {
 
     public static final String ERROR_MEESAGE_RECIPE_SHOULD_NOT_BE_NULL = "recipe should not be null.";
+    public static final String ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL = "id should not be null";
+
     private final RecipeRepository recipeRepository;
 
     @Override
@@ -19,13 +20,15 @@ public class RecipeServiceImpl implements RecipeService {
         if(recipe == null) {
             throw new IllegalArgumentException(ERROR_MEESAGE_RECIPE_SHOULD_NOT_BE_NULL);
         }
-        recipeRepository.save(recipe);
-        return recipe;
+        return recipeRepository.saveAndFlush(recipe);
     }
 
     @Override
     public Optional<Recipe> getById(Long id) {
-        return Optional.empty();
+        if(id == null) {
+            throw new IllegalArgumentException(ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL);
+        }
+        return recipeRepository.findById(id);
     }
 
     @Override
