@@ -3,17 +3,13 @@ package net.azeti.challenge.recipe.dto;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-
 @Data
 @Builder
-public class RecipeRequest {
-    @NotBlank
+public class RecipeResponse {
+    private long id;
     private String title;
-    @NotBlank
     private String username;
     private String description;
-    @NotBlank
     private String instructions;
     private int serving;
 }

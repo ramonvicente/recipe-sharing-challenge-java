@@ -1,7 +1,11 @@
 package net.azeti.challenge.recipe.converter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.azeti.challenge.recipe.dto.RecipeRequest;
+import net.azeti.challenge.recipe.dto.RecipeResponse;
 import net.azeti.challenge.recipe.model.Recipe;
+
+import java.util.Optional;
 
 public class RecipeConverter {
 
@@ -13,5 +17,39 @@ public class RecipeConverter {
                 .username(request.getUsername())
                 .serving(request.getServing())
                 .build();
+    }
+
+    public static RecipeResponse toRecipeResponse(Optional<Recipe> recipe) {
+        if(recipe.isPresent()) {
+            Recipe validRecipe = recipe.get();
+            return RecipeResponse.builder()
+                    .id(validRecipe.getId())
+                    .description(validRecipe.getDescription())
+                    .title(validRecipe.getTitle())
+                    .instructions(validRecipe.getInstructions())
+                    .username(validRecipe.getUsername())
+                    .serving(validRecipe.getServing())
+                    .build();
+        }
+        return null;
+    }
+
+    public static RecipeResponse toRecipeResponse(Recipe recipe) {
+        return RecipeResponse.builder()
+                .id(recipe.getId())
+                .description(recipe.getDescription())
+                .title(recipe.getTitle())
+                .instructions(recipe.getInstructions())
+                .username(recipe.getUsername())
+                .serving(recipe.getServing())
+                .build();
+    }
+
+    public static String toJsonString(Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
