@@ -73,4 +73,81 @@ public class RecipeServiceTest {
         assertThat(actualRecipe).isNotNull();
         assertThat(actualRecipe.getId()).isEqualTo(id);
     }
+
+    @Test
+    @DisplayName("Should update recipe given existing id.")
+    public void shouldUpdateRecipeGivenExistingId() {
+        //given
+        long id = 1L;
+        Recipe recipe = Recipe.builder()
+                .title("title")
+                .instructions("instructions")
+                .description("description")
+                .username("username")
+                .serving(1)
+                .build();
+        Recipe recipeResponse = Recipe.builder()
+                .id(id)
+                .title("title")
+                .instructions("instructions")
+                .description("description")
+                .username("username")
+                .serving(1)
+                .build();
+
+        Mockito.when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeResponse));
+        Mockito.when(recipeRepository.save(recipe)).thenReturn(recipeResponse);
+
+        //when
+        Recipe actualRecipe = recipeService.update(id, recipe);
+
+        //then
+        assertThat(recipe).isNotNull();
+        assertThat(actualRecipe.getId()).isEqualTo(recipe.getId());
+    }
+
+    @Test
+    @DisplayName("Should return null when update recipe given non existing id.")
+    public void shouldReturnNullWhenUpdateRecipeGivenNonExistingId() {
+        //given
+        long id = 1L;
+        Recipe recipe = Recipe.builder()
+                .title("title")
+                .instructions("instructions")
+                .description("description")
+                .username("username")
+                .serving(1)
+                .build();
+        Mockito.when(recipeRepository.findById(id)).thenReturn(Optional.empty());
+
+        //when
+        Recipe actualUpdate = recipeService.update(id, recipe);
+
+        //then
+        assertThat(actualUpdate).isNull();
+    }
+
+    @Test
+    @DisplayName("Should throw exception when update recipe given id null.")
+    public void shouldThrowExceptionWhenUpdateRecipeGivenIdNull() {
+        //given
+        IllegalArgumentException exception = Assert.assertThrows(IllegalArgumentException.class, () -> {
+            recipeService.update(null, new Recipe());
+        });
+
+        //then
+        assertThat(exception).hasMessage(RecipeServiceImpl.ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL);
+    }
+
+    @Test
+    @DisplayName("Should throw exception when update recipe given recipe null.")
+    public void shouldThrowExceptionWhenUpdateRecipeGivenRecipeNull() {
+        //given
+        IllegalArgumentException exception = Assert.assertThrows(IllegalArgumentException.class, () -> {
+            recipeService.update(1L, null);
+        });
+
+        //then
+        assertThat(exception).hasMessage(RecipeServiceImpl.ERROR_MEESAGE_RECIPE_SHOULD_NOT_BE_NULL);
+    }
 }

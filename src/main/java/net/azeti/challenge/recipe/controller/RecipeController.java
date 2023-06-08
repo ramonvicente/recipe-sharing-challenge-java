@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@RestController("api/v1/")
+@RestController
+@RequestMapping("api/v1/")
 @RequiredArgsConstructor
 public class RecipeController {
 
@@ -27,6 +28,15 @@ public class RecipeController {
     @GetMapping("recipes/{id}")
     public ResponseEntity<RecipeResponse> getRecipeById(@PathVariable long id) {
         RecipeResponse response = RecipeConverter.toRecipeResponse(service.getById(id));
+        if(response == null) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("recipes/{id}")
+    public ResponseEntity<RecipeResponse> updateRecipe(@PathVariable long id, @Valid @RequestBody RecipeRequest request) {
+        RecipeResponse response = RecipeConverter.toRecipeResponse(service.update(id, RecipeConverter.toRecipe(request)));
         if(response == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }

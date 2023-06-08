@@ -33,6 +33,16 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe update(Long id, Recipe recipe) {
+        if(id == null) {
+            throw new IllegalArgumentException(ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL);
+        }
+        if(recipe == null) {
+            throw new IllegalArgumentException(ERROR_MEESAGE_RECIPE_SHOULD_NOT_BE_NULL);
+        }
+        if(recipeRepository.findById(id).isPresent()) {
+            recipe.setId(id);
+            return recipeRepository.save(recipe);
+        }
         return null;
     }
 

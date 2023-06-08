@@ -10,6 +10,9 @@ import java.util.Optional;
 public class RecipeConverter {
 
     public static Recipe toRecipe(RecipeRequest request) {
+        if(request == null) {
+            return null;
+        }
         return Recipe.builder()
                 .description(request.getDescription())
                 .title(request.getTitle())
@@ -35,6 +38,9 @@ public class RecipeConverter {
     }
 
     public static RecipeResponse toRecipeResponse(Recipe recipe) {
+        if(recipe == null) {
+            return null;
+        }
         return RecipeResponse.builder()
                 .id(recipe.getId())
                 .description(recipe.getDescription())

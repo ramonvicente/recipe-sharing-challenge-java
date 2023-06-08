@@ -3,6 +3,7 @@ package net.azeti.challenge.recipe.controller;
 
 import net.azeti.challenge.recipe.converter.RecipeConverter;
 import net.azeti.challenge.recipe.dto.RecipeRequest;
+import net.azeti.challenge.recipe.dto.RecipeResponse;
 import net.azeti.challenge.recipe.model.Recipe;
 import net.azeti.challenge.recipe.service.RecipeService;
 import org.junit.Test;
@@ -57,7 +58,7 @@ public class RecipeControllerTest {
         Mockito.when(recipeService.create(recipe)).thenReturn(result);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/recipes")
+                        .post("/api/v1/recipes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(RecipeConverter.toJsonString(request)))
                 .andExpect(MockMvcResultMatchers
@@ -83,7 +84,7 @@ public class RecipeControllerTest {
         Mockito.when(recipeService.getById(id)).thenReturn(result);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/recipes/" + id))
+                        .get("/api/v1/recipes/" + id))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(RecipeConverter.toJsonString(RecipeConverter.toRecipeResponse(result))));
     }
@@ -105,8 +106,62 @@ public class RecipeControllerTest {
         Mockito.when(recipeService.getById(id)).thenReturn(Optional.empty());
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/recipes/" + id))
+                        .get("/api/v1/recipes/" + id))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
+    @Test
+    @DisplayName("Return status ok when update existing recipe.")
+    public void returnStatusOkWhenUpdateExistingRecipe() throws Exception {
+        long id = 1L;
+
+        RecipeRequest request = RecipeRequest.builder()
+                .title("title")
+                .instructions("instructions")
+                .description("description")
+                .username("username")
+                .serving(2)
+                .build();
+        Recipe result = Recipe.builder()
+                .id(id)
+                .title("title")
+                .instructions("instructions")
+                .description("description")
+                .username("username")
+                .serving(2)
+                .build();
+
+        RecipeResponse response = RecipeConverter.toRecipeResponse(result);
+
+        Mockito.when(recipeService.update(id, RecipeConverter.toRecipe(request))).thenReturn(result);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/v1/recipes/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(RecipeConverter.toJsonString(request)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(RecipeConverter.toJsonString(response)));
+    }
+
+    @Test
+    @DisplayName("Return status not found when update non existing recipe.")
+    public void returnStatusNotFoundWhenUpdateNonExistingRecipe() throws Exception {
+        long id = 1L;
+
+        RecipeRequest request = RecipeRequest.builder()
+                .title("title")
+                .instructions("instructions")
+                .description("description")
+                .username("username")
+                .serving(2)
+                .build();
+
+        Mockito.when(recipeService.update(id, RecipeConverter.toRecipe(request))).thenReturn(null);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/v1/recipes/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(RecipeConverter.toJsonString(request)))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
 }
