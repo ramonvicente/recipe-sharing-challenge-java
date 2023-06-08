@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
@@ -198,5 +199,31 @@ public class RecipeControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/v1/recipes/" + id))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Return status ok when delete existing recipe.")
+    public void returnStatusOkWhenGetRecipeListByUsername() throws Exception {
+        String username = "username";
+
+        Recipe recipe = Recipe.builder()
+                .id(1L)
+                .title("title")
+                .instructions("instructions")
+                .description("description")
+                .username("username")
+                .serving(2)
+                .build();
+        List<RecipeResponse> response = List.of(RecipeConverter.toRecipeResponse(recipe));
+
+        List<Recipe> recipes = List.of(recipe);
+
+        Mockito.when(recipeService.getByUser(username)).thenReturn(recipes);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/v1/recipes")
+                        .param("username", username))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(RecipeConverter.toJsonString(response)));
     }
 }

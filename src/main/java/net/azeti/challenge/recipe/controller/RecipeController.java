@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/")
@@ -50,6 +52,14 @@ public class RecipeController {
         if(response == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "recipes", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<RecipeResponse>> deleteRecipe(@RequestParam String username) {
+        List<RecipeResponse> response = service.getByUser(username).stream()
+                .map(RecipeConverter::toRecipeResponse)
+                .collect(Collectors.toList());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

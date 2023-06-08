@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -199,5 +200,69 @@ public class RecipeServiceTest {
 
         //then
         assertThat(exception).hasMessage(RecipeServiceImpl.ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL);
+    }
+
+    @Test
+    @DisplayName("Should return recipes when getByUser given existing username.")
+    public void shouldReturnRecipesWhenGetByUserGivenExistingUsername() {
+        //given
+        String username = "username";
+        Recipe recipe = Recipe.builder()
+                .id(1L)
+                .title("title")
+                .instructions("instructions")
+                .description("description")
+                .username(username)
+                .serving(1)
+                .build();
+        Mockito.when(recipeRepository.findRecipesByUsername(username)).thenReturn(List.of(recipe));
+
+        //when
+        List<Recipe> actualRecipe = recipeService.getByUser(username);
+
+        //then
+        assertThat(actualRecipe).isNotNull();
+        assertThat(actualRecipe).isNotEmpty();
+        assertThat(actualRecipe.size()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("Should not return recipes when getByUser given non existing username.")
+    public void shouldNotReturnRecipesWhenGetByUserGivenNonExistingUsername() {
+        //given
+        String username = "username";
+
+        Mockito.when(recipeRepository.findRecipesByUsername(username)).thenReturn(List.of());
+
+        //when
+        List<Recipe> actualRecipe = recipeService.getByUser(username);
+
+        //then
+        assertThat(actualRecipe).isNotNull();
+        assertThat(actualRecipe).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Should throw exception when getByUser given username null.")
+    public void shouldThrowExceptionWhengetByUserGivenUsernameNull() {
+        //given
+        IllegalArgumentException exception = Assert.assertThrows(IllegalArgumentException.class, () -> {
+            recipeService.getByUser(null);
+        });
+
+        //then
+        assertThat(exception).hasMessage(RecipeServiceImpl.ERROR_MESSAGE_USERNAME_SHOULD_NOT_BE_NULL_OR_BLANK);
+    }
+
+    @Test
+    @DisplayName("Should throw exception when getByUser given username empty.")
+    public void shouldThrowExceptionWhengetByUserGivenUsernameEmpty() {
+        //given
+        IllegalArgumentException exception = Assert.assertThrows(IllegalArgumentException.class, () -> {
+            recipeService.getByUser("");
+        });
+
+        //then
+        assertThat(exception).hasMessage(RecipeServiceImpl.ERROR_MESSAGE_USERNAME_SHOULD_NOT_BE_NULL_OR_BLANK);
     }
 }
