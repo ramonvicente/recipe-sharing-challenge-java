@@ -29,7 +29,7 @@ public class RecipeServiceTest {
     public void shouldCreateNewRecipeGivenValidRecipe() {
         //given
         Recipe recipe = Recipe.builder()
-                .id(1L)
+                .id("b3a09e00-0630-11ee-be56-0242ac120002")
                 .title("title")
                 .instructions("instructions")
                 .description("description")
@@ -63,7 +63,7 @@ public class RecipeServiceTest {
     @DisplayName("Should return recipe when getById given valid id.")
     public void shouldReturnRecipeWhenGetByIdGivenValidId() {
         //given
-        long id = 1L;
+        String id = "b3a09e00-0630-11ee-be56-0242ac120002";
         Optional<Recipe> returnRecipe = Optional.ofNullable(Recipe.builder().id(id).build());
         Mockito.when(recipeRepository.findById(id)).thenReturn(returnRecipe);
 
@@ -79,7 +79,7 @@ public class RecipeServiceTest {
     @DisplayName("Should update recipe given existing id.")
     public void shouldUpdateRecipeGivenExistingId() {
         //given
-        long id = 1L;
+        String id = "b3a09e00-0630-11ee-be56-0242ac120002";
         Recipe recipe = Recipe.builder()
                 .title("title")
                 .instructions("instructions")
@@ -111,7 +111,7 @@ public class RecipeServiceTest {
     @DisplayName("Should return null when update recipe given non existing id.")
     public void shouldReturnNullWhenUpdateRecipeGivenNonExistingId() {
         //given
-        long id = 1L;
+        String id = "b3a09e00-0630-11ee-be56-0242ac120002";
         Recipe recipe = Recipe.builder()
                 .title("title")
                 .instructions("instructions")
@@ -137,7 +137,7 @@ public class RecipeServiceTest {
         });
 
         //then
-        assertThat(exception).hasMessage(RecipeServiceImpl.ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL);
+        assertThat(exception).hasMessage(RecipeServiceImpl.ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL_OR_BLANK);
     }
 
     @Test
@@ -145,7 +145,7 @@ public class RecipeServiceTest {
     public void shouldThrowExceptionWhenUpdateRecipeGivenRecipeNull() {
         //given
         IllegalArgumentException exception = Assert.assertThrows(IllegalArgumentException.class, () -> {
-            recipeService.update(1L, null);
+            recipeService.update("recipe-id", null);
         });
 
         //then
@@ -156,7 +156,7 @@ public class RecipeServiceTest {
     @DisplayName("Should delete recipe given existing id.")
     public void shouldDeleteRecipeGivenExistingId() {
         //given
-        long id = 1L;
+        String id = "b3a09e00-0630-11ee-be56-0242ac120002";
         Recipe recipe = Recipe.builder()
                 .id(id)
                 .title("title")
@@ -180,7 +180,7 @@ public class RecipeServiceTest {
     @DisplayName("Should return null when delete recipe given non existing id.")
     public void shouldReturnNullWhenDeleteRecipeGivenNonExistingId() {
         //given
-        long id = 1L;
+        String id = "b3a09e00-0630-11ee-be56-0242ac120002";
         Mockito.when(recipeRepository.findById(id)).thenReturn(Optional.empty());
 
         //when
@@ -199,7 +199,7 @@ public class RecipeServiceTest {
         });
 
         //then
-        assertThat(exception).hasMessage(RecipeServiceImpl.ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL);
+        assertThat(exception).hasMessage(RecipeServiceImpl.ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL_OR_BLANK);
     }
 
     @Test
@@ -208,7 +208,7 @@ public class RecipeServiceTest {
         //given
         String username = "username";
         Recipe recipe = Recipe.builder()
-                .id(1L)
+                .id("b3a09e00-0630-11ee-be56-0242ac120002")
                 .title("title")
                 .instructions("instructions")
                 .description("description")

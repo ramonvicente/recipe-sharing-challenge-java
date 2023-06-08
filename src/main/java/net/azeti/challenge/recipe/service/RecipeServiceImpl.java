@@ -11,7 +11,7 @@ import java.util.Optional;
 public class RecipeServiceImpl implements RecipeService {
 
     public static final String ERROR_MEESAGE_RECIPE_SHOULD_NOT_BE_NULL = "recipe should not be null.";
-    public static final String ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL = "id should not be null";
+    public static final String ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL_OR_BLANK = "id should not be null or blank";
     public static final String ERROR_MESSAGE_USERNAME_SHOULD_NOT_BE_NULL_OR_BLANK = "username should not be null or blank.";
 
     private final RecipeRepository recipeRepository;
@@ -25,17 +25,17 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Optional<Recipe> getById(Long id) {
-        if(id == null) {
-            throw new IllegalArgumentException(ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL);
+    public Optional<Recipe> getById(String id) {
+        if(id == null || id.isBlank())  {
+            throw new IllegalArgumentException(ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL_OR_BLANK);
         }
         return recipeRepository.findById(id);
     }
 
     @Override
-    public Recipe update(Long id, Recipe recipe) {
-        if(id == null) {
-            throw new IllegalArgumentException(ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL);
+    public Recipe update(String id, Recipe recipe) {
+        if(id == null || id.isBlank()) {
+            throw new IllegalArgumentException(ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL_OR_BLANK);
         }
         if(recipe == null) {
             throw new IllegalArgumentException(ERROR_MEESAGE_RECIPE_SHOULD_NOT_BE_NULL);
@@ -48,9 +48,9 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe delete(Long id) {
-        if(id == null) {
-            throw new IllegalArgumentException(ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL);
+    public Recipe delete(String id) {
+        if(id == null  || id.isBlank()) {
+            throw new IllegalArgumentException(ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL_OR_BLANK);
         }
         Optional<Recipe> recipe = recipeRepository.findById(id);
         if(recipe.isPresent()) {

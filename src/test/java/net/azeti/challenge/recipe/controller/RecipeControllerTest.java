@@ -2,6 +2,7 @@ package net.azeti.challenge.recipe.controller;
 
 
 import net.azeti.challenge.recipe.converter.RecipeConverter;
+import net.azeti.challenge.recipe.dto.RecipeIdResponse;
 import net.azeti.challenge.recipe.dto.RecipeRequest;
 import net.azeti.challenge.recipe.dto.RecipeResponse;
 import net.azeti.challenge.recipe.model.Recipe;
@@ -48,7 +49,7 @@ public class RecipeControllerTest {
         Recipe recipe = RecipeConverter.toRecipe(request);
 
         Recipe result = Recipe.builder()
-                .id(1L)
+                .id("recipe-id")
                 .description(request.getDescription())
                 .title(request.getTitle())
                 .instructions(request.getInstructions())
@@ -58,6 +59,8 @@ public class RecipeControllerTest {
 
         Mockito.when(recipeService.create(recipe)).thenReturn(result);
 
+        RecipeIdResponse responseId = RecipeConverter.toRecipeIdResponse(result);
+
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/api/v1/recipes")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -65,13 +68,32 @@ public class RecipeControllerTest {
                 .andExpect(MockMvcResultMatchers
                         .status()
                         .isCreated())
-                .andExpect(MockMvcResultMatchers.content().string(result.getId().toString()));
+                .andExpect(MockMvcResultMatchers.content().string(RecipeConverter.toJsonString(responseId)));
+    }
+
+    @Test
+    @DisplayName("Return bad request when create recipe has invalid field.")
+    public void returnBadRequestWhenCreateRecipeHasInvalidField() throws Exception {
+        RecipeRequest requestWithouUsername = RecipeRequest.builder()
+                .title("title")
+                .instructions("instructions")
+                .description("description")
+                .serving(2)
+                .build();
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/v1/recipes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(RecipeConverter.toJsonString(requestWithouUsername)))
+                .andExpect(MockMvcResultMatchers
+                        .status()
+                        .isBadRequest());
     }
 
     @Test
     @DisplayName("Return status ok when get recipe by id.")
     public void returnStatusOkWhenGetRecipeById() throws Exception {
-        long id = 1L;
+        String id = "b3a09e00-0630-11ee-be56-0242ac120002";
 
         Optional<Recipe> result = Optional.of(Recipe.builder()
                 .id(id)
@@ -93,7 +115,7 @@ public class RecipeControllerTest {
     @Test
     @DisplayName("Return status not found when get recipe by id is empty.")
     public void returnStatusNotFoundWhenGetRecipeByIdIsEmpty() throws Exception {
-        long id = 1L;
+        String id = "b3a09e00-0630-11ee-be56-0242ac120002";
 
         Optional<Recipe> result = Optional.of(Recipe.builder()
                 .id(id)
@@ -114,7 +136,7 @@ public class RecipeControllerTest {
     @Test
     @DisplayName("Return status ok when update existing recipe.")
     public void returnStatusOkWhenUpdateExistingRecipe() throws Exception {
-        long id = 1L;
+        String id = "b3a09e00-0630-11ee-be56-0242ac120002";
 
         RecipeRequest request = RecipeRequest.builder()
                 .title("title")
@@ -147,7 +169,7 @@ public class RecipeControllerTest {
     @Test
     @DisplayName("Return status not found when update non existing recipe.")
     public void returnStatusNotFoundWhenUpdateNonExistingRecipe() throws Exception {
-        long id = 1L;
+        String id = "b3a09e00-0630-11ee-be56-0242ac120002";
 
         RecipeRequest request = RecipeRequest.builder()
                 .title("title")
@@ -169,7 +191,7 @@ public class RecipeControllerTest {
     @Test
     @DisplayName("Return status ok when delete existing recipe.")
     public void returnStatusOkWhenDeleteExistingRecipe() throws Exception {
-        long id = 1L;
+        String id = "b3a09e00-0630-11ee-be56-0242ac120002";
 
         Recipe recipe = Recipe.builder()
                 .id(id)
@@ -192,7 +214,7 @@ public class RecipeControllerTest {
     @Test
     @DisplayName("Return status not found when delete non existing recipe.")
     public void returnStatusNotFoundWhenDeleteNonExistingRecipe() throws Exception {
-        long id = 1L;
+        String id = "b3a09e00-0630-11ee-be56-0242ac120002";
 
         Mockito.when(recipeService.delete(id)).thenReturn(null);
 
@@ -207,7 +229,7 @@ public class RecipeControllerTest {
         String username = "username";
 
         Recipe recipe = Recipe.builder()
-                .id(1L)
+                .id("b3a09e00-0630-11ee-be56-0242ac120002")
                 .title("title")
                 .instructions("instructions")
                 .description("description")

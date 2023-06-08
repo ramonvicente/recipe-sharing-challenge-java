@@ -10,11 +10,11 @@ public interface RecipeService {
 
     Recipe create(Recipe recipe);
 
-    Optional<Recipe> getById(Long id);
+    Optional<Recipe> getById(String id);
 
-    Recipe update(Long id, Recipe recipe);
+    Recipe update(String id, Recipe recipe);
 
-    Recipe delete(Long id);
+    Recipe delete(String id);
 
     List<Recipe> getByUser(String username);
 }

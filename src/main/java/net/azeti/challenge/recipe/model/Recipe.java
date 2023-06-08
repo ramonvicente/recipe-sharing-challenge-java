@@ -1,6 +1,7 @@
 package net.azeti.challenge.recipe.model;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -12,8 +13,9 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Recipe {
     @Id
-    @GeneratedValue
-    private Long id;
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
+    private String id;
     @Column(name = "title", nullable = false)
     private String title;
     @Column(name = "username", nullable = false)

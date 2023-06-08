@@ -2,6 +2,7 @@ package net.azeti.challenge.recipe.controller;
 
 import lombok.RequiredArgsConstructor;
 import net.azeti.challenge.recipe.converter.RecipeConverter;
+import net.azeti.challenge.recipe.dto.RecipeIdResponse;
 import net.azeti.challenge.recipe.dto.RecipeRequest;
 import net.azeti.challenge.recipe.dto.RecipeResponse;
 import net.azeti.challenge.recipe.model.Recipe;
@@ -22,14 +23,14 @@ public class RecipeController {
 
     private final RecipeService service;
 
-    @PostMapping("recipes")
-    public ResponseEntity<Long> saveRecipe(@Valid @RequestBody RecipeRequest request) {
+    @PostMapping(value = "recipes", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RecipeIdResponse> saveRecipe(@Valid @RequestBody RecipeRequest request) {
         Recipe recipe = service.create(RecipeConverter.toRecipe(request));
-        return new ResponseEntity<>(recipe.getId(), HttpStatus.CREATED);
+        return new ResponseEntity<>(RecipeConverter.toRecipeIdResponse(recipe), HttpStatus.CREATED);
     }
 
-    @GetMapping("recipes/{id}")
-    public ResponseEntity<RecipeResponse> getRecipeById(@PathVariable long id) {
+    @GetMapping(value = "recipes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RecipeResponse> getRecipeById(@PathVariable String id) {
         RecipeResponse response = RecipeConverter.toRecipeResponse(service.getById(id));
         if(response == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -37,8 +38,8 @@ public class RecipeController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping("recipes/{id}")
-    public ResponseEntity<RecipeResponse> updateRecipe(@PathVariable long id, @Valid @RequestBody RecipeRequest request) {
+    @PutMapping(value = "recipes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RecipeResponse> updateRecipe(@PathVariable String id, @Valid @RequestBody RecipeRequest request) {
         RecipeResponse response = RecipeConverter.toRecipeResponse(service.update(id, RecipeConverter.toRecipe(request)));
         if(response == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -47,7 +48,7 @@ public class RecipeController {
     }
 
     @DeleteMapping(value = "recipes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RecipeResponse> deleteRecipe(@PathVariable long id) {
+    public ResponseEntity<RecipeResponse> deleteRecipe(@PathVariable String id) {
         RecipeResponse response = RecipeConverter.toRecipeResponse(service.delete(id));
         if(response == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -56,7 +57,7 @@ public class RecipeController {
     }
 
     @GetMapping(value = "recipes", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<RecipeResponse>> deleteRecipe(@RequestParam String username) {
+    public ResponseEntity<List<RecipeResponse>> getRecipesByName(@RequestParam String username) {
         List<RecipeResponse> response = service.getByUser(username).stream()
                 .map(RecipeConverter::toRecipeResponse)
                 .collect(Collectors.toList());

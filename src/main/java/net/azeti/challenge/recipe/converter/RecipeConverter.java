@@ -1,6 +1,7 @@
 package net.azeti.challenge.recipe.converter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.azeti.challenge.recipe.dto.RecipeIdResponse;
 import net.azeti.challenge.recipe.dto.RecipeRequest;
 import net.azeti.challenge.recipe.dto.RecipeResponse;
 import net.azeti.challenge.recipe.model.Recipe;
@@ -48,6 +49,15 @@ public class RecipeConverter {
                 .instructions(recipe.getInstructions())
                 .username(recipe.getUsername())
                 .serving(recipe.getServing())
+                .build();
+    }
+
+    public static RecipeIdResponse toRecipeIdResponse(Recipe recipe) {
+        if(recipe == null) {
+            return null;
+        }
+        return RecipeIdResponse.builder()
+                .id(recipe.getId())
                 .build();
     }
 
