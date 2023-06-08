@@ -164,4 +164,39 @@ public class RecipeControllerTest {
                         .content(RecipeConverter.toJsonString(request)))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
+
+    @Test
+    @DisplayName("Return status ok when delete existing recipe.")
+    public void returnStatusOkWhenDeleteExistingRecipe() throws Exception {
+        long id = 1L;
+
+        Recipe recipe = Recipe.builder()
+                .id(id)
+                .title("title")
+                .instructions("instructions")
+                .description("description")
+                .username("username")
+                .serving(2)
+                .build();
+        RecipeResponse response = RecipeConverter.toRecipeResponse(recipe);
+
+        Mockito.when(recipeService.delete(id)).thenReturn(recipe);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/v1/recipes/" + id))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(RecipeConverter.toJsonString(response)));
+    }
+
+    @Test
+    @DisplayName("Return status not found when delete non existing recipe.")
+    public void returnStatusNotFoundWhenDeleteNonExistingRecipe() throws Exception {
+        long id = 1L;
+
+        Mockito.when(recipeService.delete(id)).thenReturn(null);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/v1/recipes/" + id))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
 }

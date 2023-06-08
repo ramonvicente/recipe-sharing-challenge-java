@@ -150,4 +150,54 @@ public class RecipeServiceTest {
         //then
         assertThat(exception).hasMessage(RecipeServiceImpl.ERROR_MEESAGE_RECIPE_SHOULD_NOT_BE_NULL);
     }
+
+    @Test
+    @DisplayName("Should delete recipe given existing id.")
+    public void shouldDeleteRecipeGivenExistingId() {
+        //given
+        long id = 1L;
+        Recipe recipe = Recipe.builder()
+                .id(id)
+                .title("title")
+                .instructions("instructions")
+                .description("description")
+                .username("username")
+                .serving(1)
+                .build();
+        Mockito.when(recipeRepository.findById(id)).thenReturn(Optional.of(recipe));
+
+        //when
+        Recipe actualRecipe = recipeService.delete(id);
+
+        //then
+        Mockito.verify(recipeRepository, Mockito.times(1)).delete(recipe);
+        assertThat(actualRecipe).isNotNull();
+        assertThat(actualRecipe.getId()).isEqualTo(id);
+    }
+
+    @Test
+    @DisplayName("Should return null when delete recipe given non existing id.")
+    public void shouldReturnNullWhenDeleteRecipeGivenNonExistingId() {
+        //given
+        long id = 1L;
+        Mockito.when(recipeRepository.findById(id)).thenReturn(Optional.empty());
+
+        //when
+        Recipe actualRecipe = recipeService.delete(id);
+
+        //then
+        assertThat(actualRecipe).isNull();
+    }
+
+    @Test
+    @DisplayName("Should throw exception when delete recipe given id null.")
+    public void shouldThrowExceptionWhenDeleteRecipeGivenIdNull() {
+        //given
+        IllegalArgumentException exception = Assert.assertThrows(IllegalArgumentException.class, () -> {
+            recipeService.delete(null);
+        });
+
+        //then
+        assertThat(exception).hasMessage(RecipeServiceImpl.ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL);
+    }
 }

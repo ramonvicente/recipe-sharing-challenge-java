@@ -48,6 +48,14 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe delete(Long id) {
+        if(id == null) {
+            throw new IllegalArgumentException(ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL);
+        }
+        Optional<Recipe> recipe = recipeRepository.findById(id);
+        if(recipe.isPresent()) {
+            recipeRepository.delete(recipe.get());
+            return recipe.get();
+        }
         return null;
     }
 
