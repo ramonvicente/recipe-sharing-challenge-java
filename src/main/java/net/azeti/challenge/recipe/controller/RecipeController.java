@@ -5,7 +5,6 @@ import net.azeti.challenge.recipe.converter.RecipeConverter;
 import net.azeti.challenge.recipe.dto.RecipeIdResponse;
 import net.azeti.challenge.recipe.dto.RecipeRequest;
 import net.azeti.challenge.recipe.dto.RecipeResponse;
-import net.azeti.challenge.recipe.model.Recipe;
 import net.azeti.challenge.recipe.service.RecipeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,7 +30,7 @@ public class RecipeController {
 
     @GetMapping(value = "recipes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RecipeResponse> getRecipeById(@PathVariable String id) {
-        RecipeResponse response = RecipeConverter.toRecipeResponse(service.getById(id));
+        RecipeResponse response =service.getById(id);
         if(response == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }

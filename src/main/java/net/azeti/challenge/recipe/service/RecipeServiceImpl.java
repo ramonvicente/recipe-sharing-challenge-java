@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.azeti.challenge.recipe.converter.RecipeConverter;
 import net.azeti.challenge.recipe.dto.RecipeIdResponse;
 import net.azeti.challenge.recipe.dto.RecipeRequest;
+import net.azeti.challenge.recipe.dto.RecipeResponse;
 import net.azeti.challenge.recipe.model.Recipe;
 import net.azeti.challenge.recipe.repository.RecipeRepository;
 
@@ -29,11 +30,12 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Optional<Recipe> getById(String id) {
+    public RecipeResponse getById(String id) {
         if(id == null || id.isBlank())  {
             throw new IllegalArgumentException(ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL_OR_BLANK);
         }
-        return recipeRepository.findById(id);
+        Optional<Recipe> recipe = recipeRepository.findById(id);
+        return RecipeConverter.toRecipeResponse(recipe);
     }
 
     @Override

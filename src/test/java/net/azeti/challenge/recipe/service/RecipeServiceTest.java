@@ -2,6 +2,7 @@ package net.azeti.challenge.recipe.service;
 
 import net.azeti.challenge.recipe.dto.RecipeIdResponse;
 import net.azeti.challenge.recipe.dto.RecipeRequest;
+import net.azeti.challenge.recipe.dto.RecipeResponse;
 import net.azeti.challenge.recipe.model.Recipe;
 import net.azeti.challenge.recipe.repository.RecipeRepository;
 import org.junit.Assert;
@@ -77,7 +78,7 @@ public class RecipeServiceTest {
         Mockito.when(recipeRepository.findById(id)).thenReturn(returnRecipe);
 
         //when
-        Recipe actualRecipe = recipeService.getById(id).get();
+        RecipeResponse actualRecipe = recipeService.getById(id);
 
         //then
         assertThat(actualRecipe).isNotNull();

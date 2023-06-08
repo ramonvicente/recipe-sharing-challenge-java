@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
-import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -94,21 +93,21 @@ public class RecipeControllerTest {
     public void returnStatusOkWhenGetRecipeById() throws Exception {
         String id = "b3a09e00-0630-11ee-be56-0242ac120002";
 
-        Optional<Recipe> result = Optional.of(Recipe.builder()
+        RecipeResponse result = RecipeResponse.builder()
                 .id(id)
                 .title("title")
                 .instructions("instructions")
                 .description("description")
                 .username("username")
                 .serving(2)
-                .build());
+                .build();
 
         Mockito.when(recipeService.getById(id)).thenReturn(result);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/v1/recipes/" + id))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(RecipeConverter.toJsonString(RecipeConverter.toRecipeResponse(result))));
+                .andExpect(MockMvcResultMatchers.content().string(RecipeConverter.toJsonString(result)));
     }
 
     @Test
@@ -116,16 +115,16 @@ public class RecipeControllerTest {
     public void returnStatusNotFoundWhenGetRecipeByIdIsEmpty() throws Exception {
         String id = "b3a09e00-0630-11ee-be56-0242ac120002";
 
-        Optional<Recipe> result = Optional.of(Recipe.builder()
+        RecipeResponse result = RecipeResponse.builder()
                 .id(id)
                 .title("title")
                 .instructions("instructions")
                 .description("description")
                 .username("username")
                 .serving(2)
-                .build());
+                .build();
 
-        Mockito.when(recipeService.getById(id)).thenReturn(Optional.empty());
+        Mockito.when(recipeService.getById(id)).thenReturn(null);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/v1/recipes/" + id))
