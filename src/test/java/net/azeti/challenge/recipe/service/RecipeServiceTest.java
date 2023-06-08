@@ -1,5 +1,7 @@
 package net.azeti.challenge.recipe.service;
 
+import net.azeti.challenge.recipe.dto.RecipeIdResponse;
+import net.azeti.challenge.recipe.dto.RecipeRequest;
 import net.azeti.challenge.recipe.model.Recipe;
 import net.azeti.challenge.recipe.repository.RecipeRepository;
 import org.junit.Assert;
@@ -28,6 +30,13 @@ public class RecipeServiceTest {
     @DisplayName("Should create new recipe given valid recipe.")
     public void shouldCreateNewRecipeGivenValidRecipe() {
         //given
+        RecipeRequest request = RecipeRequest.builder()
+                .title("title")
+                .instructions("instructions")
+                .description("description")
+                .username("username")
+                .serving(1)
+                .build();
         Recipe recipe = Recipe.builder()
                 .id("b3a09e00-0630-11ee-be56-0242ac120002")
                 .title("title")
@@ -39,7 +48,7 @@ public class RecipeServiceTest {
         Mockito.when(recipeRepository.saveAndFlush(recipe)).thenReturn(recipe);
 
         //when
-        Recipe actualRecipe = recipeService.create(recipe);
+        RecipeIdResponse actualRecipe = recipeService.create(request);
 
         //then
         Mockito.verify(recipeRepository, Mockito.times(1)).saveAndFlush(recipe);

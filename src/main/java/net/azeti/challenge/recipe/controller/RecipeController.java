@@ -25,8 +25,8 @@ public class RecipeController {
 
     @PostMapping(value = "recipes", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RecipeIdResponse> saveRecipe(@Valid @RequestBody RecipeRequest request) {
-        Recipe recipe = service.create(RecipeConverter.toRecipe(request));
-        return new ResponseEntity<>(RecipeConverter.toRecipeIdResponse(recipe), HttpStatus.CREATED);
+        RecipeIdResponse response = service.create(request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping(value = "recipes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

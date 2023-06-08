@@ -1,6 +1,9 @@
 package net.azeti.challenge.recipe.service;
 
 import lombok.RequiredArgsConstructor;
+import net.azeti.challenge.recipe.converter.RecipeConverter;
+import net.azeti.challenge.recipe.dto.RecipeIdResponse;
+import net.azeti.challenge.recipe.dto.RecipeRequest;
 import net.azeti.challenge.recipe.model.Recipe;
 import net.azeti.challenge.recipe.repository.RecipeRepository;
 
@@ -17,11 +20,12 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
 
     @Override
-    public Recipe create(Recipe recipe) {
-        if(recipe == null) {
+    public RecipeIdResponse create(RecipeRequest recipeRequest) {
+        if(recipeRequest == null) {
             throw new IllegalArgumentException(ERROR_MEESAGE_RECIPE_SHOULD_NOT_BE_NULL);
         }
-        return recipeRepository.saveAndFlush(recipe);
+        Recipe recipe = RecipeConverter.toRecipe(recipeRequest);
+        return RecipeConverter.toRecipeIdResponse(recipeRepository.saveAndFlush(recipe));
     }
 
     @Override

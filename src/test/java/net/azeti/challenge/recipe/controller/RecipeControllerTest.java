@@ -57,9 +57,8 @@ public class RecipeControllerTest {
                 .serving(request.getServing())
                 .build();
 
-        Mockito.when(recipeService.create(recipe)).thenReturn(result);
-
         RecipeIdResponse responseId = RecipeConverter.toRecipeIdResponse(result);
+        Mockito.when(recipeService.create(request)).thenReturn(responseId);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/api/v1/recipes")
