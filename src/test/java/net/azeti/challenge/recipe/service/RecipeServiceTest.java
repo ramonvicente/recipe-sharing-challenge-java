@@ -185,7 +185,7 @@ public class RecipeServiceTest {
         Mockito.when(recipeRepository.findById(id)).thenReturn(Optional.of(recipe));
 
         //when
-        Recipe actualRecipe = recipeService.delete(id);
+        RecipeResponse actualRecipe = recipeService.delete(id);
 
         //then
         Mockito.verify(recipeRepository, Mockito.times(1)).delete(recipe);
@@ -201,7 +201,7 @@ public class RecipeServiceTest {
         Mockito.when(recipeRepository.findById(id)).thenReturn(Optional.empty());
 
         //when
-        Recipe actualRecipe = recipeService.delete(id);
+        RecipeResponse actualRecipe = recipeService.delete(id);
 
         //then
         assertThat(actualRecipe).isNull();

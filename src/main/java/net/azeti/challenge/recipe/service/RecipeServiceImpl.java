@@ -56,14 +56,14 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe delete(String id) {
+    public RecipeResponse delete(String id) {
         if(id == null  || id.isBlank()) {
             throw new IllegalArgumentException(ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL_OR_BLANK);
         }
         Optional<Recipe> recipe = recipeRepository.findById(id);
         if(recipe.isPresent()) {
             recipeRepository.delete(recipe.get());
-            return recipe.get();
+            return RecipeConverter.toRecipeResponse(recipe.get());
         }
         return null;
     }

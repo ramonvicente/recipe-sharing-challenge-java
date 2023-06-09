@@ -189,7 +189,7 @@ public class RecipeControllerTest {
     public void returnStatusOkWhenDeleteExistingRecipe() throws Exception {
         String id = "b3a09e00-0630-11ee-be56-0242ac120002";
 
-        Recipe recipe = Recipe.builder()
+        RecipeResponse response = RecipeResponse.builder()
                 .id(id)
                 .title("title")
                 .instructions("instructions")
@@ -197,14 +197,12 @@ public class RecipeControllerTest {
                 .username("username")
                 .serving(2)
                 .build();
-        RecipeResponse response = RecipeConverter.toRecipeResponse(recipe);
 
-        Mockito.when(recipeService.delete(id)).thenReturn(recipe);
+        Mockito.when(recipeService.delete(id)).thenReturn(response);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/v1/recipes/" + id))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(RecipeConverter.toJsonString(response)));
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     @Test

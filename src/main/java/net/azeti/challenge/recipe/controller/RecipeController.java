@@ -48,11 +48,11 @@ public class RecipeController {
 
     @DeleteMapping(value = "recipes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RecipeResponse> deleteRecipe(@PathVariable String id) {
-        RecipeResponse response = RecipeConverter.toRecipeResponse(service.delete(id));
+        RecipeResponse response = service.delete(id);
         if(response == null) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping(value = "recipes", produces = MediaType.APPLICATION_JSON_VALUE)

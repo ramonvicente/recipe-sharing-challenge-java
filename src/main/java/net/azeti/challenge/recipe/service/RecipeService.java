@@ -32,7 +32,12 @@ public interface RecipeService {
      */
     RecipeResponse update(String recipeId, RecipeRequest recipeRequest);
 
-    Recipe delete(String id);
+    /**
+     * Delete {@link Recipe} by id in the database.
+     * @param recipeId String containing recipe id.
+     * @return {@link net.azeti.challenge.recipe.dto.RecipeResponse} DTO containing the found {@link Recipe} data.
+     */
+    RecipeResponse delete(String recipeId);
 
     List<Recipe> getByUser(String username);
 }
