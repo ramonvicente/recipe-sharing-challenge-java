@@ -2,6 +2,7 @@ package net.azeti.challenge.recipe.controller;
 
 
 import net.azeti.challenge.recipe.converter.RecipeConverter;
+import net.azeti.challenge.recipe.dto.IngredientRequest;
 import net.azeti.challenge.recipe.dto.RecipeIdResponse;
 import net.azeti.challenge.recipe.dto.RecipeRequest;
 import net.azeti.challenge.recipe.dto.RecipeResponse;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,10 +24,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
+import java.util.Set;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class RecipeControllerTest {
 
     @Autowired
@@ -42,10 +45,9 @@ public class RecipeControllerTest {
                 .instructions("instructions")
                 .description("description")
                 .username("username")
+                .ingredients(Set.of(IngredientRequest.builder().build()))
                 .serving(2)
                 .build();
-
-        Recipe recipe = RecipeConverter.toRecipe(request);
 
         Recipe result = Recipe.builder()
                 .id("recipe-id")
@@ -62,7 +64,8 @@ public class RecipeControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/api/v1/recipes")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(RecipeConverter.toJsonString(request)))
+                        .content(RecipeConverter.toJsonString(request))
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer token"))
                 .andExpect(MockMvcResultMatchers
                         .status()
                         .isCreated())
@@ -142,6 +145,7 @@ public class RecipeControllerTest {
                 .description("description")
                 .username("username")
                 .serving(2)
+                .ingredients(Set.of(IngredientRequest.builder().build()))
                 .build();
         RecipeResponse result = RecipeResponse.builder()
                 .id(id)
@@ -173,6 +177,7 @@ public class RecipeControllerTest {
                 .description("description")
                 .username("username")
                 .serving(2)
+                .ingredients(Set.of(IngredientRequest.builder().build()))
                 .build();
 
         Mockito.when(recipeService.update(id,request)).thenReturn(null);

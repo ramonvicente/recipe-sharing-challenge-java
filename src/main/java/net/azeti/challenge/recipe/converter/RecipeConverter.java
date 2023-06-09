@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.azeti.challenge.recipe.dto.RecipeIdResponse;
 import net.azeti.challenge.recipe.dto.RecipeRequest;
 import net.azeti.challenge.recipe.dto.RecipeResponse;
+import net.azeti.challenge.recipe.model.Ingredient;
 import net.azeti.challenge.recipe.model.Recipe;
 
 import java.util.Optional;
+import java.util.Set;
 
 public class RecipeConverter {
 
@@ -33,6 +35,7 @@ public class RecipeConverter {
                     .instructions(validRecipe.getInstructions())
                     .username(validRecipe.getUsername())
                     .serving(validRecipe.getServing())
+                    .ingredients(IngredientConverter.toIngredientResponse(validRecipe.getIngredients()))
                     .build();
         }
         return null;

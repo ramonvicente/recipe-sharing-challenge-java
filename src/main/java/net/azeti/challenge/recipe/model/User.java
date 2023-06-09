@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @Builder
-@Table(name="user_tb",
+@Table(name="users",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email")
