@@ -1,4 +1,4 @@
-package net.azeti.challenge.recipe.user;
+package net.azeti.challenge.recipe.dto.auth;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
