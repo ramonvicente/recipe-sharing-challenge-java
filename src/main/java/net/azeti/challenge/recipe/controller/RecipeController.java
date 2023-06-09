@@ -39,7 +39,7 @@ public class RecipeController {
 
     @PutMapping(value = "recipes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RecipeResponse> updateRecipe(@PathVariable String id, @Valid @RequestBody RecipeRequest request) {
-        RecipeResponse response = RecipeConverter.toRecipeResponse(service.update(id, RecipeConverter.toRecipe(request)));
+        RecipeResponse response = service.update(id, request);
         if(response == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }

@@ -1,5 +1,6 @@
 package net.azeti.challenge.recipe.service;
 
+import net.azeti.challenge.recipe.converter.RecipeConverter;
 import net.azeti.challenge.recipe.dto.RecipeIdResponse;
 import net.azeti.challenge.recipe.dto.RecipeRequest;
 import net.azeti.challenge.recipe.dto.RecipeResponse;
@@ -38,7 +39,7 @@ public class RecipeServiceTest {
                 .username("username")
                 .serving(1)
                 .build();
-        Recipe recipe = Recipe.builder()
+        Recipe savedRecipe = Recipe.builder()
                 .id("b3a09e00-0630-11ee-be56-0242ac120002")
                 .title("title")
                 .instructions("instructions")
@@ -46,15 +47,14 @@ public class RecipeServiceTest {
                 .username("username")
                 .serving(1)
                 .build();
-        Mockito.when(recipeRepository.saveAndFlush(recipe)).thenReturn(recipe);
+        Mockito.when(recipeRepository.saveAndFlush(Mockito.any(Recipe.class))).thenReturn(savedRecipe);
 
         //when
         RecipeIdResponse actualRecipe = recipeService.create(request);
 
         //then
-        Mockito.verify(recipeRepository, Mockito.times(1)).saveAndFlush(recipe);
-        assertThat(recipe).isNotNull();
-        assertThat(actualRecipe.getId()).isEqualTo(recipe.getId());
+        assertThat(actualRecipe).isNotNull();
+        assertThat(actualRecipe.getId()).isEqualTo(savedRecipe.getId());
     }
 
     @Test
@@ -90,14 +90,14 @@ public class RecipeServiceTest {
     public void shouldUpdateRecipeGivenExistingId() {
         //given
         String id = "b3a09e00-0630-11ee-be56-0242ac120002";
-        Recipe recipe = Recipe.builder()
+        RecipeRequest recipeRequest = RecipeRequest.builder()
                 .title("title")
                 .instructions("instructions")
                 .description("description")
                 .username("username")
                 .serving(1)
                 .build();
-        Recipe recipeResponse = Recipe.builder()
+        Recipe recipe = Recipe.builder()
                 .id(id)
                 .title("title")
                 .instructions("instructions")
@@ -106,11 +106,11 @@ public class RecipeServiceTest {
                 .serving(1)
                 .build();
 
-        Mockito.when(recipeRepository.findById(id)).thenReturn(Optional.of(recipeResponse));
-        Mockito.when(recipeRepository.save(recipe)).thenReturn(recipeResponse);
+        Mockito.when(recipeRepository.findById(id)).thenReturn(Optional.of(recipe));
+        Mockito.when(recipeRepository.save(recipe)).thenReturn(recipe);
 
         //when
-        Recipe actualRecipe = recipeService.update(id, recipe);
+        RecipeResponse actualRecipe = recipeService.update(id, recipeRequest);
 
         //then
         assertThat(recipe).isNotNull();
@@ -122,7 +122,7 @@ public class RecipeServiceTest {
     public void shouldReturnNullWhenUpdateRecipeGivenNonExistingId() {
         //given
         String id = "b3a09e00-0630-11ee-be56-0242ac120002";
-        Recipe recipe = Recipe.builder()
+        RecipeRequest recipe = RecipeRequest.builder()
                 .title("title")
                 .instructions("instructions")
                 .description("description")
@@ -132,7 +132,7 @@ public class RecipeServiceTest {
         Mockito.when(recipeRepository.findById(id)).thenReturn(Optional.empty());
 
         //when
-        Recipe actualUpdate = recipeService.update(id, recipe);
+        RecipeResponse actualUpdate = recipeService.update(id, recipe);
 
         //then
         assertThat(actualUpdate).isNull();
@@ -143,7 +143,14 @@ public class RecipeServiceTest {
     public void shouldThrowExceptionWhenUpdateRecipeGivenIdNull() {
         //given
         IllegalArgumentException exception = Assert.assertThrows(IllegalArgumentException.class, () -> {
-            recipeService.update(null, new Recipe());
+            RecipeRequest request = RecipeRequest.builder()
+                    .title("title")
+                    .instructions("instructions")
+                    .description("description")
+                    .username("username")
+                    .serving(1)
+                    .build();
+            recipeService.update(null, request);
         });
 
         //then

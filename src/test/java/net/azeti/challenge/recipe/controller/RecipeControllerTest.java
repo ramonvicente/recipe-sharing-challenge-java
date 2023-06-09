@@ -143,7 +143,7 @@ public class RecipeControllerTest {
                 .username("username")
                 .serving(2)
                 .build();
-        Recipe result = Recipe.builder()
+        RecipeResponse result = RecipeResponse.builder()
                 .id(id)
                 .title("title")
                 .instructions("instructions")
@@ -152,16 +152,14 @@ public class RecipeControllerTest {
                 .serving(2)
                 .build();
 
-        RecipeResponse response = RecipeConverter.toRecipeResponse(result);
-
-        Mockito.when(recipeService.update(id, RecipeConverter.toRecipe(request))).thenReturn(result);
+        Mockito.when(recipeService.update(id, request)).thenReturn(result);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put("/api/v1/recipes/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(RecipeConverter.toJsonString(request)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(RecipeConverter.toJsonString(response)));
+                .andExpect(MockMvcResultMatchers.content().string(RecipeConverter.toJsonString(result)));
     }
 
     @Test
@@ -177,7 +175,7 @@ public class RecipeControllerTest {
                 .serving(2)
                 .build();
 
-        Mockito.when(recipeService.update(id, RecipeConverter.toRecipe(request))).thenReturn(null);
+        Mockito.when(recipeService.update(id,request)).thenReturn(null);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put("/api/v1/recipes/" + id)

@@ -24,7 +24,13 @@ public interface RecipeService {
      */
     RecipeResponse getById(String recipeId);
 
-    Recipe update(String id, Recipe recipe);
+    /**
+     * Update {@link Recipe} by id in the database provided by {@link RecipeRequest}.
+     * @param recipeId String containing recipe id.
+     * @param recipeRequest DTO containing the {@link Recipe} data to be updated.
+     * @return {@link net.azeti.challenge.recipe.dto.RecipeResponse} DTO containing the updated {@link Recipe} data.
+     */
+    RecipeResponse update(String recipeId, RecipeRequest recipeRequest);
 
     Recipe delete(String id);
 

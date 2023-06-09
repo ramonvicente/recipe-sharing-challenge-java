@@ -30,25 +30,27 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public RecipeResponse getById(String id) {
-        if(id == null || id.isBlank())  {
+    public RecipeResponse getById(String recipeId) {
+        if(recipeId == null || recipeId.isBlank())  {
             throw new IllegalArgumentException(ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL_OR_BLANK);
         }
-        Optional<Recipe> recipe = recipeRepository.findById(id);
+        Optional<Recipe> recipe = recipeRepository.findById(recipeId);
         return RecipeConverter.toRecipeResponse(recipe);
     }
 
     @Override
-    public Recipe update(String id, Recipe recipe) {
-        if(id == null || id.isBlank()) {
+    public RecipeResponse update(String recipeId, RecipeRequest request) {
+        if(recipeId == null || recipeId.isBlank()) {
             throw new IllegalArgumentException(ERROR_MESSAGE_ID_SHOULD_NOT_BE_NULL_OR_BLANK);
         }
-        if(recipe == null) {
+        if(request == null) {
             throw new IllegalArgumentException(ERROR_MEESAGE_RECIPE_SHOULD_NOT_BE_NULL);
         }
-        if(recipeRepository.findById(id).isPresent()) {
-            recipe.setId(id);
-            return recipeRepository.save(recipe);
+        if(recipeRepository.findById(recipeId).isPresent()) {
+            Recipe recipe = RecipeConverter.toRecipe(request);
+            recipe.setId(recipeId);
+            Recipe savedRecipe = recipeRepository.save(recipe);
+            return RecipeConverter.toRecipeResponse(savedRecipe);
         }
         return null;
     }
