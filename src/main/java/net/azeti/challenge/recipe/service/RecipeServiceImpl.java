@@ -10,6 +10,7 @@ import net.azeti.challenge.recipe.repository.RecipeRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class RecipeServiceImpl implements RecipeService {
@@ -69,10 +70,12 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<Recipe> getByUser(String username) {
+    public List<RecipeResponse> getByUser(String username) {
         if(username == null || username.isBlank()) {
             throw new IllegalArgumentException(ERROR_MESSAGE_USERNAME_SHOULD_NOT_BE_NULL_OR_BLANK);
         }
-        return recipeRepository.findRecipesByUsername(username);
+        return recipeRepository.findRecipesByUsername(username).stream()
+                .map(RecipeConverter::toRecipeResponse)
+                .collect(Collectors.toList());
     }
 }

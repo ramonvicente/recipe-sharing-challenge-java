@@ -57,9 +57,7 @@ public class RecipeController {
 
     @GetMapping(value = "recipes", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<RecipeResponse>> getRecipesByName(@RequestParam String username) {
-        List<RecipeResponse> response = service.getByUser(username).stream()
-                .map(RecipeConverter::toRecipeResponse)
-                .collect(Collectors.toList());
+        List<RecipeResponse> response = service.getByUser(username);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

@@ -39,5 +39,10 @@ public interface RecipeService {
      */
     RecipeResponse delete(String recipeId);
 
-    List<Recipe> getByUser(String username);
+    /**
+     * Get List of {@link Recipe} by username from the database.
+     * @param username String containing recipe username.
+     * @return List of {@link net.azeti.challenge.recipe.dto.RecipeResponse} DTO containing the found {@link Recipe} data.
+     */
+    List<RecipeResponse> getByUser(String username);
 }

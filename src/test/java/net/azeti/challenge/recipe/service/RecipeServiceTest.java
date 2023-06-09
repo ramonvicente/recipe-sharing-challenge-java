@@ -235,7 +235,7 @@ public class RecipeServiceTest {
         Mockito.when(recipeRepository.findRecipesByUsername(username)).thenReturn(List.of(recipe));
 
         //when
-        List<Recipe> actualRecipe = recipeService.getByUser(username);
+        List<RecipeResponse> actualRecipe = recipeService.getByUser(username);
 
         //then
         assertThat(actualRecipe).isNotNull();
@@ -252,7 +252,7 @@ public class RecipeServiceTest {
         Mockito.when(recipeRepository.findRecipesByUsername(username)).thenReturn(List.of());
 
         //when
-        List<Recipe> actualRecipe = recipeService.getByUser(username);
+        List<RecipeResponse> actualRecipe = recipeService.getByUser(username);
 
         //then
         assertThat(actualRecipe).isNotNull();

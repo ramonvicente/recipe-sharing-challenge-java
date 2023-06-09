@@ -222,7 +222,7 @@ public class RecipeControllerTest {
     public void returnStatusOkWhenGetRecipeListByUsername() throws Exception {
         String username = "username";
 
-        Recipe recipe = Recipe.builder()
+        RecipeResponse recipe = RecipeResponse.builder()
                 .id("b3a09e00-0630-11ee-be56-0242ac120002")
                 .title("title")
                 .instructions("instructions")
@@ -230,9 +230,8 @@ public class RecipeControllerTest {
                 .username("username")
                 .serving(2)
                 .build();
-        List<RecipeResponse> response = List.of(RecipeConverter.toRecipeResponse(recipe));
 
-        List<Recipe> recipes = List.of(recipe);
+        List<RecipeResponse> recipes = List.of(recipe);
 
         Mockito.when(recipeService.getByUser(username)).thenReturn(recipes);
 
@@ -240,6 +239,6 @@ public class RecipeControllerTest {
                         .get("/api/v1/recipes")
                         .param("username", username))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(RecipeConverter.toJsonString(response)));
+                .andExpect(MockMvcResultMatchers.content().string(RecipeConverter.toJsonString(recipes)));
     }
 }
