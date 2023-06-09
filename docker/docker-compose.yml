@@ -1,0 +1,12 @@
+version: '3.5'
+
+services:
+  postgresdb:
+    image: postgres:12
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: testdb
+    ports:
+      - 5432:5432
