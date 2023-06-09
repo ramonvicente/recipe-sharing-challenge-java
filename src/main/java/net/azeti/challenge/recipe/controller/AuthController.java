@@ -3,7 +3,7 @@ package net.azeti.challenge.recipe.controller;
 import lombok.RequiredArgsConstructor;
 import net.azeti.challenge.recipe.service.UserService;
 import net.azeti.challenge.recipe.service.UserServiceImpl;
-import net.azeti.challenge.recipe.dto.auth.Registration;
+import net.azeti.challenge.recipe.dto.auth.RegistrationRequest;
 import net.azeti.challenge.recipe.dto.auth.RegistrationResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,8 +23,8 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping(value = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RegistrationResult> registerUser(@Valid @RequestBody Registration registration) {
-        RegistrationResult result = userService.registerUser(registration);
+    public ResponseEntity<RegistrationResult> registerUser(@Valid @RequestBody RegistrationRequest request) {
+        RegistrationResult result = userService.registerUser(request);
         if(userExist(result)) {
             return new ResponseEntity<>(result, HttpStatus.CONFLICT);
         }

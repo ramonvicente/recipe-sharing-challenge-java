@@ -18,12 +18,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+    public static final String ERROR_MESSAGE_USERNAME_SHOULD_NOT_BE_NULL_OR_BLANK = "username should not be null or blank.";
+
     @Autowired
     private UserRepository userRepository;
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        if(username == null || username.isBlank()) {
+            throw new IllegalArgumentException(ERROR_MESSAGE_USERNAME_SHOULD_NOT_BE_NULL_OR_BLANK);
+        }
+
         User user = userRepository.findByUsername(username);
         if(user == null) {
             throw new UsernameNotFoundException("User Not Found with username: " + username);
