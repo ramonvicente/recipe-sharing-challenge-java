@@ -8,17 +8,17 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(
-        prePostEnabled = true)
+@EnableMethodSecurity
 public class SecurityConfiguration {
 
     @Autowired
@@ -54,15 +54,15 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        /*http.csrf(csrf -> csrf.disable())
+        http.csrf(csrf -> csrf.disable())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/v1/**").permitAll()
-                                .requestMatchers("/api/test/**").permitAll()
+                        auth.antMatchers("/api/v1/auth/**").permitAll()
+                                .antMatchers("/api/test/**").permitAll()
                                 .anyRequest().authenticated()
-                );*/
-        http.csrf().disable();
+                );
+       // http.csrf().disable();
 
         http.authenticationProvider(authenticationProvider());
 

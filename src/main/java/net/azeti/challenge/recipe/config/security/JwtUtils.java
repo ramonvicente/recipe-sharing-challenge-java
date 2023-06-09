@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 
-@Component
 @Slf4j
+@Component
 public class JwtUtils {
 
     @Value("${recipe.app.jwtSecret}")

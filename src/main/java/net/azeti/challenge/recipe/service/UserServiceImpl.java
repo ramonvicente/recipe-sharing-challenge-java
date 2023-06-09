@@ -1,12 +1,18 @@
 package net.azeti.challenge.recipe.service;
 
 import lombok.RequiredArgsConstructor;
+import net.azeti.challenge.recipe.config.security.JwtUtils;
 import net.azeti.challenge.recipe.model.User;
 import net.azeti.challenge.recipe.repository.UserRepository;
 import net.azeti.challenge.recipe.dto.auth.RegistrationRequest;
 import net.azeti.challenge.recipe.dto.auth.RegistrationResult;
-import net.azeti.challenge.recipe.user.Login;
-import net.azeti.challenge.recipe.user.Token;
+import net.azeti.challenge.recipe.dto.auth.LoginRequest;
+import net.azeti.challenge.recipe.user.TokenResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +29,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    private final AuthenticationManager authenticationManager;
+
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @Override
     public RegistrationResult registerUser(RegistrationRequest registration) {
@@ -56,7 +67,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<Token> login(Login login) {
-        return Optional.empty();
+    public TokenResponse login(LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
+        return TokenResponse.builder()
+                .accessToken(jwt)
+                .build();
     }
 }

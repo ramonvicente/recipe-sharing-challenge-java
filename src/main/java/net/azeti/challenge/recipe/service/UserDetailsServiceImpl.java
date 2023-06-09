@@ -37,6 +37,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return UserDetailsImpl.builder()
                 .id(user.getId())
+                .username(user.getUsername())
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .authorities(List.of(new SimpleGrantedAuthority("USER")))
