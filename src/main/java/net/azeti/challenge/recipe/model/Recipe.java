@@ -4,11 +4,14 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
 @Entity
 @Builder
-@Table(name="recipe_tb")
+@Getter
+@Setter
+@Table(name="recipes")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Recipe {
@@ -26,4 +29,6 @@ public class Recipe {
     private String instructions;
     @Column(name = "servings")
     private int serving;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "recipe", cascade = CascadeType.ALL)
+    private Set<Ingredient> ingredients = new HashSet<>(0);
 }
